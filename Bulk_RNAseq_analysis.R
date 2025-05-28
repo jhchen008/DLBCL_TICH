@@ -219,7 +219,7 @@ coldata = merge(merged_data, ecotyper_types, by.x = "RNA_seq_ID", by.y = "ID")
 chisq.test(table(coldata$DLBCL_CAPS_group, coldata$Lymphoma.Ecotype))
 
 
-# ecotyper output files, macrophage
+# ecotyper output files, monocytes and macrophage
 ecotyper_mac = read.table("./ecotyper_output/Lymphoma_Cell_States/Monocytes.and.Macrophages/Monocytes.and.Macrophages_Cell_State_Assignment.txt",header=T,sep="\t")
 coldata = merge(merged_data, ecotyper_mac, by.x = "RNA_seq_ID", by.y = "ID")
 
