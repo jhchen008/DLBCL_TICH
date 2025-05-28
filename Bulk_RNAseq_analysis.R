@@ -158,14 +158,14 @@ merged_data$DLBCL_CAPS_group <- ifelse(merged_data$DLBCL_CH_Up_CAPS >= quantile(
 merged_data$DLBCL_CAPS_group = factor(merged_data$DLBCL_CAPS_group, levels=c("Low", "High"))
 
 # OS
-surv_object <- Surv(time = (merged_data$OS_time)/12, event = merged_data$is_OS)
+surv_object <- Surv(time = merged_data$OS_time, event = merged_data$is_OS)
 fit <- survfit(surv_object ~ DLBCL_CAPS_group, data = merged_data)
 
 plot.new()
 p = ggsurvplot(fit, data = merged_data, pval = TRUE, risk.table = TRUE,
-           title = "OS by CH Signature",
+           title = "OS by CAPS score",
            xlab = "Time (Years)", ylab = "OS (%)",
-           legend.title = "CH-lasso",
+           legend.title = "CAPS score",
            legend.labs = c("Low", "High"),
            legend = c(0.75, 0.8), font.legend=12,
            risk.table.height = 0.28,
@@ -175,14 +175,14 @@ print(p, newpage = FALSE)
 
 
 # PFS
-surv_object <- Surv(time = (merged_data$PFS_time)/12, event = merged_data$is_PFS)
+surv_object <- Surv(time = merged_data$PFS_time, event = merged_data$is_PFS)
 fit <- survfit(surv_object ~ DLBCL_CAPS_group, data = merged_data)
 
 plot.new()
 p = ggsurvplot(fit, data = merged_data, pval = TRUE, risk.table = TRUE,
-           title = "PFS by CH Signature",
+           title = "PFS by CAPS score",
            xlab = "Time (Years)", ylab = "PFS (%)",
-           legend.title = "CH-lasso",
+           legend.title = "CAPS score",
            legend.labs = c("Low", "High"),
            legend = c(0.75, 0.8), font.legend=12,
            risk.table.height = 0.28,
