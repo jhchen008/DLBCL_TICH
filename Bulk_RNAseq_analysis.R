@@ -193,18 +193,16 @@ print(p, newpage = FALSE)
 ###### multivariate COX regression analysis ######
 
 # define groups
-pt_fisher = merged_data
-
-pt_fisher$Gender_gp <- ifelse(pt_fisher$Gender == "","NA", ifelse(pt_fisher$Gender == "Male", "1", "0"))
-pt_fisher$COO_NonvsGCB <- ifelse(pt_fisher$HANS == "","NA", ifelse(pt_fisher$HANS == "nonGCB", "1", "0"))
-pt_fisher$IPI_3to5 <- ifelse(pt_fisher$IPI == "","NA", ifelse(pt_fisher$IPI > 2, "1", "0"))
+merged_data$Gender_gp <- ifelse(merged_data$Gender == "","NA", ifelse(merged_data$Gender == "Male", "1", "0"))
+merged_data$COO_NonvsGCB <- ifelse(merged_data$HANS == "","NA", ifelse(merged_data$HANS == "nonGCB", "1", "0"))
+merged_data$IPI_3to5 <- ifelse(merged_data$IPI == "","NA", ifelse(merged_data$IPI > 2, "1", "0"))
 
 # multivariate cox regression analysis
-cox_model <- coxph(Surv(OS_time, is_OS) ~ DLBCL_CAPS_group +Gender_gp +IPI_3to5 +COO_NonvsGCB +Age, data = pt_fisher)
+cox_model <- coxph(Surv(OS_time, is_OS) ~ DLBCL_CAPS_group +Gender_gp +IPI_3to5 +COO_NonvsGCB +Age, data = merged_data)
 cox_summary = summary(cox_model)
 cox_summary
 
-cox_model <- coxph(Surv(PFS_time, is_PFS) ~ DLBCL_CAPS_group +Gender_gp +IPI_3to5 +COO_NonvsGCB +Age, data = pt_fisher)
+cox_model <- coxph(Surv(PFS_time, is_PFS) ~ DLBCL_CAPS_group +Gender_gp +IPI_3to5 +COO_NonvsGCB +Age, data = merged_data)
 cox_summary = summary(cox_model)
 cox_summary
 
@@ -215,20 +213,14 @@ cox_summary
 ###### ecotyper results ######
 
 # ecotyper output files, Ecotypes
-ecotyper_types_abd = read.table("./ecotyper_output/Lymphoma_Ecotypes/Ecotype_Abundance.txt",header=T,sep="\t")
 ecotyper_types = read.table("./ecotyper_output/Lymphoma_Ecotypes/Ecotype_Assignment.txt",header=T,sep="\t")
-
-coldata = merge(merged_data, ecotyper_types_abd, by.x = "RNA_seq_ID", by.y = "ID")
 coldata = merge(merged_data, ecotyper_types, by.x = "RNA_seq_ID", by.y = "ID")
 
 chisq.test(table(coldata$DLBCL_CAPS_group, coldata$Lymphoma.Ecotype))
 
 
 # ecotyper output files, macrophage
-ecotyper_mac_abd = read.table("./ecotyper_output/Lymphoma_Cell_States/Monocytes.and.Macrophages/Monocytes.and.Macrophages_Cell_State_Abundance.txt",header=T,sep="\t")
 ecotyper_mac = read.table("./ecotyper_output/Lymphoma_Cell_States/Monocytes.and.Macrophages/Monocytes.and.Macrophages_Cell_State_Assignment.txt",header=T,sep="\t")
-
-coldata = merge(merged_data, ecotyper_mac_abd, by.x = "RNA_seq_ID", by.y = "ID")
 coldata = merge(merged_data, ecotyper_mac, by.x = "RNA_seq_ID", by.y = "ID")
 
 chisq.test(table(coldata$DLBCL_CAPS_group, coldata$Cell.State))
@@ -236,9 +228,6 @@ chisq.test(table(coldata$DLBCL_CAPS_group, coldata$Cell.State))
 
 # ecotyper output files, Fibroblasts
 ecotyper_Fib = read.table("./ecotyper_output/Lymphoma_Cell_States/Fibroblasts/Fibroblasts_Cell_State_Assignment.txt",header=T,sep="\t")
-ecotyper_Fib_abd = read.table("./ecotyper_output/Lymphoma_Cell_States/Fibroblasts/Fibroblasts_Cell_State_Abundance.txt",header=T,sep="\t")
-
-coldata = merge(merged_data, ecotyper_Fib_abd, by.x = "RNA_seq_ID", by.y = "ID")
 coldata = merge(coldata, ecotyper_Fib, by.x = "RNA_seq_ID", by.y = "ID")
 
 chisq.test(table(coldata$DLBCL_CAPS_group, coldata$Cell.State))
