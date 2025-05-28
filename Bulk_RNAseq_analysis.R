@@ -128,18 +128,18 @@ library(GSEABase)
 library(AUCell)
 
 # load gene sets
-gset_stem <- getGmt("gene_sets.gmt")
-gset_stem <- subsetGeneSets(gset_stem, rownames(normalized_expression)) 
+gset_ch <- getGmt("gene_sets.gmt")
+gset_ch <- subsetGeneSets(gset_ch, rownames(normalized_expression)) 
 
 # gene set enrichment score with ssGSEA
-ssgseaPar <- ssgseaParam(as.matrix(normalized_expression), gset_stem)
-gset_stem_ssgsea <- gsva(ssgseaPar, verbose=FALSE)
-gset_stem_ssgsea = as.data.frame(gset_stem_ssgsea)
+ssgseaPar <- ssgseaParam(as.matrix(normalized_expression), gset_ch)
+gset_ch_ssgsea <- gsva(ssgseaPar, verbose=FALSE)
+gset_ch_ssgsea = as.data.frame(gset_ch_ssgsea)
 
 # merge GSEA results with patient information
-transposed_data <- as.data.frame(t(gset_stem_ssgsea))
-colnames(transposed_data) <- rownames(gset_stem_ssgsea)
-rownames(transposed_data) <- colnames(gset_stem_ssgsea)
+transposed_data <- as.data.frame(t(gset_ch_ssgsea))
+colnames(transposed_data) <- rownames(gset_ch_ssgsea)
+rownames(transposed_data) <- colnames(gset_ch_ssgsea)
 
 # add gene expression into the patient info table
 transposed_data <- data.frame(Seq_ID = rownames(transposed_data), transposed_data)
